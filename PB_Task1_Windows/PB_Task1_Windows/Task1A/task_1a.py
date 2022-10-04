@@ -260,12 +260,9 @@ if __name__ == "__main__":
 
 #madhura
 #omkar sutar
-<<<<<<< HEAD
 #priyanka
-=======
 
 #omkar
 #priyanka
 #aniruddha
 
->>>>>>> 8f30de9899f04f03f73650e1b87e1ede6cbfddc1
