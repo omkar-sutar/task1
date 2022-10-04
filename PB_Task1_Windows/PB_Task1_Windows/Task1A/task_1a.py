@@ -259,9 +259,9 @@ if __name__ == "__main__":
 			cv2.destroyAllWindows()
 
 #madhura
-<<<<<<< HEAD
 #omkar sutar
-=======
+
 #omkar
 #priyanka
->>>>>>> 40a3fedbafbe56946f129559f3b46f4542967abb
+#aniruddha
+
