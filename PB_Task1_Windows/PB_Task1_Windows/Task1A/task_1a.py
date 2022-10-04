@@ -257,3 +257,5 @@ if __name__ == "__main__":
 			cv2.imshow("image", maze_image)
 			cv2.waitKey(2000)
 			cv2.destroyAllWindows()
+
+#madhura
