@@ -32,6 +32,11 @@ import cv2
 import numpy as np
 ##############################################################
 
+#Constants
+IMAGE_SIZE=800
+MAZE_SIZE=600
+SQUARE_SIZE=100
+
 ################# ADD UTILITY FUNCTIONS HERE #################
 
 
@@ -94,9 +99,19 @@ def detect_horizontal_roads_under_construction(maze_image):
 	horizontal_roads_under_construction = []
 
 	##############	ADD YOUR CODE HERE	##############
+	indices=["A","B","C","D","E","F","G"]
+	for row in range(2,MAZE_SIZE,SQUARE_SIZE):
+		for col in range(SQUARE_SIZE,MAZE_SIZE+1,SQUARE_SIZE):
+			midpoint=[row,col-(SQUARE_SIZE//2)]	#coordinates of the midpoint of road
+			if (maze_image[midpoint[0]][midpoint[1]]==np.array([255,255,255])).all():
+				number=row//SQUARE_SIZE + 1 #! based indexing
+				letter_left=indices[midpoint[1]//SQUARE_SIZE]
+				letter_right=indices[midpoint[1]//SQUARE_SIZE + 1]
+				position=f"{letter_left}{number}-{letter_right}{number}"
+				horizontal_roads_under_construction.append(position)
 	
+
 	##################################################
-	
 	return horizontal_roads_under_construction	
 
 def detect_vertical_roads_under_construction(maze_image):
@@ -201,7 +216,8 @@ def detect_arena_parameters(maze_image):
 	##############	ADD YOUR CODE HERE	##############
 
 	
-	
+	arena_parameters['horizontal_roads_under_construction']=detect_horizontal_roads_under_construction(maze_image)
+	arena_parameters['vertical_roads_under_construction']=detect_vertical_roads_under_construction(maze_image)
 	##################################################
 	
 	return arena_parameters
@@ -219,6 +235,11 @@ if __name__ == "__main__":
 	
 	# read image using opencv
 	maze_image = cv2.imread(img_file_path)
+	#Just keep the maze
+	maze_image=maze_image[95:705,95:705]
+
+	MAZE_SIZE=len(maze_image)
+	SQUARE_SIZE=MAZE_SIZE//6
 	
 	print('\n============================================')
 	print('\nFor maze_' + str(file_num) + '.png')
