@@ -28,6 +28,7 @@
 ## You have to implement this task with the three available ##
 ## modules for this task (numpy, opencv)                    ##
 ##############################################################
+from turtle import position
 import cv2
 import numpy as np
 ##############################################################
@@ -104,7 +105,7 @@ def detect_horizontal_roads_under_construction(maze_image):
 		for col in range(SQUARE_SIZE,MAZE_SIZE+1,SQUARE_SIZE):
 			midpoint=[row,col-(SQUARE_SIZE//2)]	#coordinates of the midpoint of road
 			if (maze_image[midpoint[0]][midpoint[1]]==np.array([255,255,255])).all():
-				number=row//SQUARE_SIZE + 1 #! based indexing
+				number=row//SQUARE_SIZE + 1 #1 based indexing
 				letter_left=indices[midpoint[1]//SQUARE_SIZE]
 				letter_right=indices[midpoint[1]//SQUARE_SIZE + 1]
 				position=f"{letter_left}{number}-{letter_right}{number}"
@@ -138,9 +139,20 @@ def detect_vertical_roads_under_construction(maze_image):
 	vertical_roads_under_construction = []
 
 	##############	ADD YOUR CODE HERE	##############
+
+	indices=["A","B","C","D","E","F","G"]
+	for row in range(SQUARE_SIZE,MAZE_SIZE+1,SQUARE_SIZE):
+		for col in range(2,MAZE_SIZE+1,SQUARE_SIZE):
+			midpoint=[row-(SQUARE_SIZE//2),col]
+			if (maze_image[midpoint[0]][midpoint[1]]==np.array([255,255,255])).all():
+				letter=indices[midpoint[1]//SQUARE_SIZE]
+				number_up=midpoint[0]//SQUARE_SIZE+1
+				number_down=number_up+1
+				position=f"{letter}{number_up}-{letter}{number_down}"
+				vertical_roads_under_construction.append(position)
+
 	
 	##################################################
-	
 	return vertical_roads_under_construction
 
 
