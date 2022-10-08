@@ -31,6 +31,7 @@
 from turtle import position
 import cv2
 import numpy as np
+from copy import deepcopy
 ##############################################################
 
 #Constants
@@ -70,6 +71,17 @@ def detect_traffic_signals(maze_image):
 	traffic_signals = []
 
 	##############	ADD YOUR CODE HERE	##############
+	indices=["A","B","C","D","E","F","G"]
+
+	for row in range(3,MAZE_SIZE+1,SQUARE_SIZE-1):
+		for col in range(4,MAZE_SIZE+1,SQUARE_SIZE-1):
+			#maze_image[row][col]=np.array([0,255,0])
+			if(maze_image[row][col]==np.array([0,0,255])).all():
+				letter=indices[col//100]
+				number=row//100 + 1
+				position=f"{letter}{number}"
+				traffic_signals.append(position)
+
 	
 	##################################################
 	
@@ -190,6 +202,40 @@ def detect_medicine_packages(maze_image):
 
 	##############	ADD YOUR CODE HERE	##############
 
+	maze_image=deepcopy(maze_image)
+
+	maze_image=maze_image[20:-20,20:-20]
+
+	brown_lo=np.array([0,0,0])
+	brown_hi=np.array([0,0,0])
+
+	mask=cv2.inRange(maze_image,brown_lo,brown_hi)
+	maze_image[mask>0]=(255,255,255)
+
+	brown_lo=np.array([255,0,0])
+	brown_hi=np.array([255,0,0])
+
+	mask=cv2.inRange(maze_image,brown_lo,brown_hi)
+	maze_image[mask>0]=(255,255,255)
+
+	# brown_lo=np.array([0,255,0])
+	# brown_hi=np.array([0,255,0])
+
+	# mask=cv2.inRange(maze_image,brown_lo,brown_hi)
+	# maze_image[mask>0]=(255,255,255)
+
+	brown_lo=np.array([0,0,255])
+	brown_hi=np.array([0,0,255])
+
+	mask=cv2.inRange(maze_image,brown_lo,brown_hi)
+	maze_image[mask>0]=(255,255,255)
+	
+	
+	cv2.imshow("image", maze_image)
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()
+
+
 	##################################################
 
 	return medicine_packages
@@ -227,9 +273,17 @@ def detect_arena_parameters(maze_image):
 
 	##############	ADD YOUR CODE HERE	##############
 
+	#Just keep the maze
+	maze_image=maze_image[95:705,95:705]
+
+	MAZE_SIZE=len(maze_image)
+	SQUARE_SIZE=MAZE_SIZE//6
+
 	
 	arena_parameters['horizontal_roads_under_construction']=detect_horizontal_roads_under_construction(maze_image)
 	arena_parameters['vertical_roads_under_construction']=detect_vertical_roads_under_construction(maze_image)
+	arena_parameters['detect_traffic_signals']=detect_traffic_signals(maze_image)
+	detect_medicine_packages(maze_image)
 	##################################################
 	
 	return arena_parameters
@@ -247,11 +301,7 @@ if __name__ == "__main__":
 	
 	# read image using opencv
 	maze_image = cv2.imread(img_file_path)
-	#Just keep the maze
-	maze_image=maze_image[95:705,95:705]
-
-	MAZE_SIZE=len(maze_image)
-	SQUARE_SIZE=MAZE_SIZE//6
+	
 	
 	print('\n============================================')
 	print('\nFor maze_' + str(file_num) + '.png')
@@ -261,10 +311,10 @@ if __name__ == "__main__":
 
 	print("Arena Prameters: " , arena_parameters)
 
-	# display the maze image
-	cv2.imshow("image", maze_image)
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
+	# # display the maze image
+	# cv2.imshow("image", maze_image)
+	# cv2.waitKey(0)
+	# cv2.destroyAllWindows()
 
 	choice = input('\nDo you want to run your script on all test images ? => "y" or "n": ')
 	
@@ -277,6 +327,7 @@ if __name__ == "__main__":
 			
 			# read image using opencv
 			maze_image = cv2.imread(img_file_path)
+			print(maze_image.shape)
 	
 			print('\n============================================')
 			print('\nFor maze_' + str(file_num) + '.png')
@@ -286,10 +337,10 @@ if __name__ == "__main__":
 
 			print("Arena Parameter: ", arena_parameters)
 				
-			# display the test image
-			cv2.imshow("image", maze_image)
-			cv2.waitKey(2000)
-			cv2.destroyAllWindows()
+			# # display the test image
+			# cv2.imshow("image", maze_image)
+			# cv2.waitKey(2000)
+			# cv2.destroyAllWindows()
 
 #madhura
 #omkar sutar
