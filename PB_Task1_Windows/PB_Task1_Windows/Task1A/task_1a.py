@@ -206,17 +206,16 @@ def detect_medicine_packages(maze_image):
 
 	maze_image=maze_image[20:-20,20:-20]
 
-	brown_lo=np.array([0,0,0])
-	brown_hi=np.array([0,0,0])
+	#remove black
 
-	mask=cv2.inRange(maze_image,brown_lo,brown_hi)
-	maze_image[mask>0]=(255,255,255)
+	black_lo=np.array([0,0,0])
+	black_hi=black_lo
 
-	brown_lo=np.array([255,0,0])
-	brown_hi=np.array([255,0,0])
+	mask1=cv2.inRange(maze_image,black_lo,black_hi)
+	# maze_image[mask>0]=(255,255,255)
 
-	mask=cv2.inRange(maze_image,brown_lo,brown_hi)
-	maze_image[mask>0]=(255,255,255)
+	blue_lo=blue_hi=np.array([255,0,0])
+	mask2=cv2.inRange(maze_image,blue_lo,blue_hi)
 
 	# brown_lo=np.array([0,255,0])
 	# brown_hi=np.array([0,255,0])
@@ -224,10 +223,11 @@ def detect_medicine_packages(maze_image):
 	# mask=cv2.inRange(maze_image,brown_lo,brown_hi)
 	# maze_image[mask>0]=(255,255,255)
 
-	brown_lo=np.array([0,0,255])
-	brown_hi=np.array([0,0,255])
+	red_lo=np.array([0,0,255])
+	red_hi=red_lo
 
-	mask=cv2.inRange(maze_image,brown_lo,brown_hi)
+	mask3=cv2.inRange(maze_image,red_lo,red_hi)
+	mask=cv2.bitwise_or(mask1,cv2.bitwise_or(mask2,mask3))
 	maze_image[mask>0]=(255,255,255)
 	
 	
