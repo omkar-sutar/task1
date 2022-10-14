@@ -66,8 +66,23 @@ def detect_Qr_details(image):
     """    
     Qr_codes_details = {}
 
-    ##############	ADD YOUR CODE HERE	##############
+    ##############	ADD YOUR CODE HERE	##############'
+    decoded= pyzbar.decode(image)
+    #print(decoded)
+    for qr in decoded:
+        polygon=qr.polygon
+        x=0
+        y=0
+        for point in polygon:
+            x+=point.x
+            y+=point.y
+        x//=4
+        y//=4
+        Qr_codes_details[str(qr.data.decode())]=[x,y]
     
+   
+        
+
     ##################################################
     
     return Qr_codes_details    
