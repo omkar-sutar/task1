@@ -212,16 +212,9 @@ def detect_medicine_packages(maze_image):
 	black_hi=black_lo
 
 	mask1=cv2.inRange(maze_image,black_lo,black_hi)
-	# maze_image[mask>0]=(255,255,255)
 
 	blue_lo=blue_hi=np.array([255,0,0])
 	mask2=cv2.inRange(maze_image,blue_lo,blue_hi)
-
-	# brown_lo=np.array([0,255,0])
-	# brown_hi=np.array([0,255,0])
-
-	# mask=cv2.inRange(maze_image,brown_lo,brown_hi)
-	# maze_image[mask>0]=(255,255,255)
 
 	red_lo=np.array([0,0,255])
 	red_hi=red_lo
