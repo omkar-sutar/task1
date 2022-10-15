@@ -124,7 +124,7 @@ def detect_ArUco_details(image):
 	"DICT_APRILTAG_36h10": cv2.aruco.DICT_APRILTAG_36h10,
 	"DICT_APRILTAG_36h11": cv2.aruco.DICT_APRILTAG_36h11
     }
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     id =[]
     arucoDict = aruco.Dictionary_get(ARUCO_DICT["DICT_5X5_1000"])
     arucoParam = aruco.DetectorParameters_create()
@@ -150,7 +150,7 @@ def detect_ArUco_details(image):
         midx = int((tl[0]+tr[0])/2)
         lin = (midx, midy)
         lin1 = (cX,cY)
-        cen = (cX, cY)
+        cen = [cX, cY]
         slope = (cY - midy)/(cX - midx)
         deg = math.degrees(math.atan(slope))
         if cX > midx:

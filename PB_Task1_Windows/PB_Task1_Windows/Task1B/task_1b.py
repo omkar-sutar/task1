@@ -66,23 +66,8 @@ def detect_Qr_details(image):
     """    
     Qr_codes_details = {}
 
-    ##############	ADD YOUR CODE HERE	##############'
-    decoded= pyzbar.decode(image)
-    #print(decoded)
-    for qr in decoded:
-        polygon=qr.polygon
-        x=0
-        y=0
-        for point in polygon:
-            x+=point.x
-            y+=point.y
-        x//=4
-        y//=4
-        Qr_codes_details[str(qr.data.decode())]=[x,y]
+    ##############	ADD YOUR CODE HERE	##############
     
-   
-        
-
     ##################################################
     
     return Qr_codes_details    
@@ -111,14 +96,90 @@ def detect_ArUco_details(image):
     Example call:
     ---
     ArUco_details_dict = detect_ArUco_details(image)
-    """    
+    """ 
     ArUco_details_dict = {} #should be sorted in ascending order of ids
     ArUco_corners = {}
     
     ##############	ADD YOUR CODE HERE	##############
-   
+    ARUCO_DICT = {
+	"DICT_4X4_50": cv2.aruco.DICT_4X4_50,
+	"DICT_4X4_100": cv2.aruco.DICT_4X4_100,
+	"DICT_4X4_250": cv2.aruco.DICT_4X4_250,
+	"DICT_4X4_1000": cv2.aruco.DICT_4X4_1000,
+	"DICT_5X5_50": cv2.aruco.DICT_5X5_50,
+	"DICT_5X5_100": cv2.aruco.DICT_5X5_100,
+	"DICT_5X5_250": cv2.aruco.DICT_5X5_250,
+	"DICT_5X5_1000": cv2.aruco.DICT_5X5_1000,
+	"DICT_6X6_50": cv2.aruco.DICT_6X6_50,
+	"DICT_6X6_100": cv2.aruco.DICT_6X6_100,
+	"DICT_6X6_250": cv2.aruco.DICT_6X6_250,
+	"DICT_6X6_1000": cv2.aruco.DICT_6X6_1000,
+	"DICT_7X7_50": cv2.aruco.DICT_7X7_50,
+	"DICT_7X7_100": cv2.aruco.DICT_7X7_100,
+	"DICT_7X7_250": cv2.aruco.DICT_7X7_250,
+	"DICT_7X7_1000": cv2.aruco.DICT_7X7_1000,
+	"DICT_ARUCO_ORIGINAL": cv2.aruco.DICT_ARUCO_ORIGINAL,
+	"DICT_APRILTAG_16h5": cv2.aruco.DICT_APRILTAG_16h5,
+	"DICT_APRILTAG_25h9": cv2.aruco.DICT_APRILTAG_25h9,
+	"DICT_APRILTAG_36h10": cv2.aruco.DICT_APRILTAG_36h10,
+	"DICT_APRILTAG_36h11": cv2.aruco.DICT_APRILTAG_36h11
+    }
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    id =[]
+    arucoDict = aruco.Dictionary_get(ARUCO_DICT["DICT_5X5_1000"])
+    arucoParam = aruco.DetectorParameters_create()
+    bboxs, ids, rejected = aruco.detectMarkers(gray, arucoDict, parameters = arucoParam)
+    for i in ids:
+        id.append(i)
+    oo = 0
+    alist = []
+    for vkd in bboxs:
+        sqr = vkd
+        tmp =[]
+        tt = vkd[0].tolist()
+        ArUco_corners[id[oo][0]] = tt
+        sqr = vkd.reshape((4, 2))
+        (tl, tr, br, bl) = sqr
+        tr = (int(tr[0]), int(tr[1]))
+        br = (int(br[0]), int(br[1]))
+        bl = (int(bl[0]), int(bl[1]))
+        tl = (int(tl[0]), int(tl[1]))
+        cX = (tl[0] + br[0]) / 2.0
+        cY = (tl[1] + br[1]) / 2.0
+        midy = (tl[1]+tr[1])/2
+        midx = (tl[0]+tr[0])/2
+        # lin = (midx, midy)
+        # lin1 = (cX,cY)
+        cen = (round(cX), round(cY))
+        deg=None
+        cX=round(cX)
+        cY=round(cY)
+        midx=round(midx)
+        midy=round(midy)
+        if cX-midx!=0:
+            slope = (cY - midy)/(cX - midx)
+            deg = math.degrees(math.atan(slope))
+        else:
+            deg=90
+        
+        if cX > midx:
+            deg = int(90 - deg)
+        elif cX == midx:
+            deg = 0
+        else:
+            deg = 90 - deg
+            deg = 180 - deg
+            deg = deg*(-1)
+        deg=round(deg)
+        tmp.append(cen)
+        tmp.append(deg)
+        ArUco_details_dict[int(id[oo][0])] = tmp
+        oo+=1
+
+
+
     ##################################################
-    
+    print(ArUco_details_dict)
     return ArUco_details_dict, ArUco_corners 
 
 ######### YOU ARE NOT ALLOWED TO MAKE CHANGES TO THE CODE BELOW #########	
